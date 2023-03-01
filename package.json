@@ -1,0 +1,26 @@
+{
+    "name": "kairnial-viewer",
+    "version": "1.0.0",
+    "description": "Kairnial Viewer App",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "dev": "vite serve",
+        "build": "tsc && vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "eslint": "^8.35.0",
+        "prettier": "^2.8.4",
+        "typescript": "^4.9.3",
+        "vite": "^4.1.0",
+        "vite-plugin-mkcert": "^1.13.3"
+    },
+    "dependencies": {
+        "@babylonjs/core": "^5.48.0",
+        "bim-viewer": "../bim-viewer"
+    },
+    "prettier": {
+        "tabWidth": 4
+    }
+}

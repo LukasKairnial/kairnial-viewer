@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>HyperModel</title>
+</head>
+
+<body oncontextmenu='return false;' style='position: relative'>
+<div id='canvas-container'>
+  <canvas id='canvas' class='canvas' tabindex='1' style='z-index:1'>
+    Canvas and / or WebGL are not supported by your browser.
+  </canvas>
+  </div>
+</div>
+<div id='tooltip' style='display:none'>This is the tooltip</div>
+<div style='position: absolute;left: 50%;right:50%;bottom:20px;z-index: 100;'>
+  <div id='container' style='z-index: 110;'></div>
+</div>
+
+<script src="./src/index.ts" type="module"></script>
+</body>
+</html>
