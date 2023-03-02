@@ -1,6 +1,6 @@
 import { KeyboardEventTypes } from "@babylonjs/core";
 import { GLTFLoader } from "bim-viewer/build/module/scene/gltf/loader";
-import { Viewer, World } from "bim-viewer";
+import { GLTFLoadingInfo, IModel, Viewer, World } from "bim-viewer";
 import {
     HoldKeyType,
     KeyType,
@@ -10,15 +10,18 @@ import "./hyperModel.css";
 class KairnialViewer {
     viewer: Viewer;
     loader: GLTFLoader;
-    actions: Map<string, () => void> = new Map();
     constructor() {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-        this.viewer = new Viewer(canvas);
         this.loader = new GLTFLoader();
+        this.viewer = new Viewer(canvas);
     }
 
-    load(url: string) {
-        return this.loader.load(url, this.viewer.scene);
+    load(info: GLTFLoadingInfo) {
+        return this.viewer.modelManager.load(info, this.loader);
+    }
+
+    delete(id: string) {
+        return this.viewer.modelManager.remove(id);
     }
 
     async setDebugMode() {
@@ -42,10 +45,6 @@ class KairnialViewer {
             () => viewer.navigation.toggle()
         );
     }
-
-    setAction(key: string, action: () => void) {
-        this.actions.set(key, action);
-    }
 }
 
 enum FrontAction {
@@ -59,6 +58,7 @@ type FrontEvent = Event & {
 
 window.addEventListener("DOMContentLoaded", (event) => {
     const viewer = new KairnialViewer();
+
     viewer.setInputs();
     viewer.setDebugMode();
     window.addEventListener("message", (event: FrontEvent) => {
@@ -66,14 +66,18 @@ window.addEventListener("DOMContentLoaded", (event) => {
             case FrontAction.DELETE_MODEL:
                 console.log("Deleting");
                 console.log(event.data);
+                viewer.delete(event.data.r__model);
                 break;
             case FrontAction.LOAD_MODEL:
                 console.log("Loading");
                 const dbId = event.data.url.match(/rmodel=([^\.]+)/)![1];
                 const modelId = event.data.r__model;
-                viewer.load(
-                    `https://local-gltf.kairnial.io/glb/${dbId}.${modelId}`
-                );
+                viewer.load({
+                    id: modelId,
+                    url: `${
+                        import.meta.env.VITE_GLTF_URL
+                    }/glb/${dbId}.${modelId}`,
+                });
                 break;
         }
     });
