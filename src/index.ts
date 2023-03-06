@@ -1,9 +1,12 @@
 import { KeyboardEventTypes } from "@babylonjs/core";
-import { GLTFLoader, GLTFLoadingInfo, Viewer } from "bim-viewer";
 import {
-    HoldKeyType,
+    GLTFLoader,
+    OrbitCamera,
+    Viewer,
     KeyType,
-} from "bim-viewer/build/main/components/input-manager";
+    HoldKeyType,
+} from "bim-viewer";
+import type { GLTFLoadingInfo } from "bim-viewer";
 import "./hyperModel.css";
 
 class KairnialViewer {
@@ -32,6 +35,13 @@ class KairnialViewer {
         this.viewer.navigation.activeCamera = changed;
     }
 
+    toggleOrthographic() {
+        const active = this.viewer.navigation.activeCamera;
+        if (active instanceof OrbitCamera) {
+            active.toggleMode();
+        }
+    }
+
     async setDebugMode() {
         const viewer = this.viewer;
 
@@ -52,6 +62,13 @@ class KairnialViewer {
             HoldKeyType.NONE,
             () => this.toggleCamera()
         );
+
+        viewer.inputManager.onKeyPressed(
+            KeyboardEventTypes.KEYDOWN,
+            KeyType.O,
+            HoldKeyType.NONE,
+            () => this.toggleOrthographic()
+        );
     }
 }
 
@@ -66,6 +83,10 @@ type FrontEvent = Event & {
 
 window.addEventListener("DOMContentLoaded", (event) => {
     const viewer = new KairnialViewer();
+    viewer.load({
+        url: "https://local-gltf.kairnial.io/glb/small_revvit_classic/debug",
+        id: "Bite",
+    });
 
     viewer.setInputs();
     viewer.setDebugMode();
