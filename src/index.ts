@@ -1,6 +1,5 @@
 import { KeyboardEventTypes } from "@babylonjs/core";
-import { GLTFLoader } from "bim-viewer/build/module/scene/gltf/loader";
-import { GLTFLoadingInfo, IModel, Viewer, World } from "bim-viewer";
+import { GLTFLoader, GLTFLoadingInfo, Viewer } from "bim-viewer";
 import {
     HoldKeyType,
     KeyType,
@@ -24,6 +23,15 @@ class KairnialViewer {
         return this.viewer.modelManager.remove(id);
     }
 
+    toggleCamera() {
+        const active = this.viewer.navigation.activeCamera;
+        const changed =
+            active === this.viewer.navigation.orbitCamera
+                ? this.viewer.navigation.flyCamera
+                : this.viewer.navigation.orbitCamera;
+        this.viewer.navigation.activeCamera = changed;
+    }
+
     async setDebugMode() {
         const viewer = this.viewer;
 
@@ -42,7 +50,7 @@ class KairnialViewer {
             KeyboardEventTypes.KEYDOWN,
             KeyType.C,
             HoldKeyType.NONE,
-            () => viewer.navigation.toggle()
+            () => this.toggleCamera()
         );
     }
 }
